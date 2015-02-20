@@ -14,7 +14,10 @@ class PullRequestEventConverter extends BaseConverter
         $statements[] = $this->buildPrQuery($event);
         $statements[] = $this->buildHeadBranch($event);
         $statements[] = $this->buildBaseBranch($event);
-        $statements[] = $this->buildForks($event);
+        $forksQuery = $this->buildForks($event);
+        if (null !== $forksQuery) {
+            $statements[] = $forksQuery;
+        }
 
         return $statements;
     }
@@ -64,10 +67,10 @@ class PullRequestEventConverter extends BaseConverter
         }
 
         $q .= '
-        MERGE (branch:Branch {label: {br_label}})
-        ON CREATE SET branch.ref = {br_ref}
+        MERGE (branch:Branch {reference: {br_ref}})
+        ON CREATE SET branch.name = {br_name}
         MERGE (pr)-[:HEAD]->(branch)
-        MERGE (branch)-[:FROM_REPOSITORY]->(repo)
+        MERGE (branch)-[:BRANCH_OF]->(repo)
         MERGE (repo)-[:OWNED_BY]->(user)';
 
         $p = [
@@ -76,8 +79,8 @@ class PullRequestEventConverter extends BaseConverter
             'repo_name' => $event->getPullRequest()->getHead()->getRepository()->getName(),
             'owner_id' => $event->getPullRequest()->getHead()->getRepository()->getOwner()->getId(),
             'owner_login' => $event->getPullRequest()->getHead()->getRepository()->getOwner()->getLogin(),
-            'br_label' => $event->getPullRequest()->getHead()->getLabel(),
-            'br_ref' => $event->getPullRequest()->getHead()->getReferenceName()
+            'br_ref' => $event->getPullRequest()->getHead()->getRepository()->getId() . ':' . $event->getPullRequest()->getHead()->getReferenceName(),
+            'br_name' => $event->getPullRequest()->getHead()->getReferenceName()
         ];
 
         return [
@@ -100,10 +103,10 @@ class PullRequestEventConverter extends BaseConverter
         }
 
         $q .= '
-        MERGE (branch:Branch {label: {br_label}})
-        ON CREATE SET branch.ref = {br_ref}
+        MERGE (branch:Branch {reference: {br_ref}})
+        ON CREATE SET branch.name = {br_name}
         MERGE (pr)-[:BASE]->(branch)
-        MERGE (branch)-[:FROM_REPOSITORY]->(repo)
+        MERGE (branch)-[:BRANCH_OF]->(repo)
         MERGE (repo)-[:OWNED_BY]->(user)';
 
         $p = [
@@ -112,8 +115,8 @@ class PullRequestEventConverter extends BaseConverter
             'repo_name' => $event->getPullRequest()->getBase()->getRepository()->getName(),
             'owner_id' => $event->getPullRequest()->getBase()->getRepository()->getOwner()->getId(),
             'owner_login' => $event->getPullRequest()->getBase()->getRepository()->getOwner()->getLogin(),
-            'br_label' => $event->getPullRequest()->getBase()->getLabel(),
-            'br_ref' => $event->getPullRequest()->getBase()->getReferenceName()
+            'br_ref' => $event->getPullRequest()->getBase()->getRepository()->getId() . ':' . $event->getPullRequest()->getBase()->getReferenceName(),
+            'br_name' => $event->getPullRequest()->getBase()->getReferenceName()
         ];
 
         return [
@@ -124,13 +127,18 @@ class PullRequestEventConverter extends BaseConverter
 
     private function buildForks(PullRequestEvent $event)
     {
+        $repo_id = $event->getPullRequest()->getBase()->getRepository()->getId();
+        $head_id = $event->getPullRequest()->getHead()->getRepository()->getId();
+        if ($repo_id === $head_id) {
+            return null;
+        }
         $q = 'MATCH (head:Repository {id: {head_id}})
         MATCH (repo:Repository {id: {repo_id}})
         MERGE (head)-[:FORK_OF]->(repo)';
 
         $p = [
-            'head_id' => $event->getPullRequest()->getHead()->getRepository()->getId(),
-            'repo_id' => $event->getPullRequest()->getBase()->getRepository()->getId()
+            'head_id' => $head_id,
+            'repo_id' => $repo_id
         ];
 
         return [

@@ -38,7 +38,7 @@ class CreateEventConverter extends BaseConverter
             $q .= '
             MERGE (branch:Branch {reference: {branch_ref}})
             MERGE (event)-[:CREATED_BRANCH]->(branch)
-            MERGE (branch)-[:FROM_REPOSITORY]->(repo)
+            MERGE (branch)-[:BRANCH_OF]->(repo)
             ';
             $p['branch_ref'] = $event->getRepository()->getId() . ':' . $event->getNewBranchName();
         } elseif ($event->isNewTag()) {
