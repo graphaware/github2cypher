@@ -126,16 +126,16 @@
         },
         {
             "name": "ikwattro/github-event",
-            "version": "1.0.3",
+            "version": "1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ikwattro/github-event.git",
-                "reference": "bb409c1a7159dd6db76b8b059ca7a44201778b01"
+                "reference": "eca5837c8fd070f8687982c13f265f26798a813f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ikwattro/github-event/zipball/bb409c1a7159dd6db76b8b059ca7a44201778b01",
-                "reference": "bb409c1a7159dd6db76b8b059ca7a44201778b01",
+                "url": "https://api.github.com/repos/ikwattro/github-event/zipball/eca5837c8fd070f8687982c13f265f26798a813f",
+                "reference": "eca5837c8fd070f8687982c13f265f26798a813f",
                 "shasum": ""
             },
             "require": {
@@ -165,7 +165,7 @@
                 }
             ],
             "description": "Github Api Public Events to PHP Objects Mapper",
-            "time": "2015-02-15 14:41:15"
+            "time": "2015-02-21 21:54:17"
         },
         {
             "name": "monolog/monolog",
