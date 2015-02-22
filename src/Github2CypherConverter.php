@@ -13,7 +13,8 @@ namespace Ikwattro\Github2Cypher;
 
 use Ikwattro\Github2Cypher\Converter\CreateEventConverter,
     Ikwattro\Github2Cypher\Converter\PushEventConverter,
-    Ikwattro\Github2Cypher\Converter\PullRequestEventConverter;
+    Ikwattro\Github2Cypher\Converter\PullRequestEventConverter,
+    Ikwattro\Github2Cypher\Converter\WatchEventConverter;
 use Ikwattro\GithubEvent\Event\BaseEvent;
 
 class Github2CypherConverter
@@ -31,7 +32,8 @@ class Github2CypherConverter
         $this->converters = [
             'PullRequestEvent' => new PullRequestEventConverter(),
             'PushEvent' => new PushEventConverter(),
-            'CreateEvent' => new CreateEventConverter()
+            'CreateEvent' => new CreateEventConverter(),
+            'WatchEvent' => new WatchEventConverter(),
         ];
     }
 
