@@ -32,6 +32,7 @@ foreach ($events as $event) {
     $statements = $converter->convert($event);
     // Returns a collection of statements of the form ['query' => 'MATCH xxx...', 'params' => ['p1' => 'v1', 'p2' => 'v2', ..]
 }
+```
 
 You can then use [NeoClient](https://github.com/neoxygen/neo4j-neoclient) to import the queries into [Neo4j](http://neo4j.com).
 
