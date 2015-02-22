@@ -22,7 +22,7 @@ abstract class BaseConverter implements EventConverterInterface
         MERGE (user)-[:LAST_EVENT]->(event)
         WITH user, event, collect(lastEvent) as lastEvents
         FOREACH (x in lastEvents | CREATE (event)-[:NEXT]->(x))
-        RETURN count(lastEvents) as i';
+        RETURN event';
 
         $p = [
             'user_id' => $event->getActor()->getId(),

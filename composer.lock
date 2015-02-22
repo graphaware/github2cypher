@@ -241,16 +241,16 @@
         },
         {
             "name": "neoxygen/neoclient",
-            "version": "2.1.4",
+            "version": "2.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/neoxygen/neo4j-neoclient.git",
-                "reference": "3cacfb256dac48e3fb8cfe3ac31ef97eace4eb19"
+                "reference": "0e342c9723af127710479013cd74fe997a5f19fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neoxygen/neo4j-neoclient/zipball/3cacfb256dac48e3fb8cfe3ac31ef97eace4eb19",
-                "reference": "3cacfb256dac48e3fb8cfe3ac31ef97eace4eb19",
+                "url": "https://api.github.com/repos/neoxygen/neo4j-neoclient/zipball/0e342c9723af127710479013cd74fe997a5f19fe",
+                "reference": "0e342c9723af127710479013cd74fe997a5f19fe",
                 "shasum": ""
             },
             "require": {
@@ -299,7 +299,7 @@
                 "high-availibility",
                 "neo4j"
             ],
-            "time": "2015-02-13 20:37:32"
+            "time": "2015-02-22 20:28:11"
         },
         {
             "name": "psr/log",
