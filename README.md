@@ -36,6 +36,15 @@ foreach ($events as $event) {
 
 You can then use [NeoClient](https://github.com/neoxygen/neo4j-neoclient) to import the queries into [Neo4j](http://neo4j.com).
 
+##  Indexes and Constraints
+
+If you plan to import the queries into Neo4j (which is the goal), you can create the needed indexes and unique constraints easily.
+
+These two methods returns you an array of indexes or constraints to create on labels/properties :
+
+* `getInitialSchemaIndexes();`
+* `getInitialSchemaConstraints();`
+
 
 #### Author
 
