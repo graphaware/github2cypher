@@ -87,7 +87,8 @@ class Github2CypherConverter
             array('label' => 'PullRequest', 'property' => 'id'),
             array('label' => 'Push', 'property' => 'id'),
             array('label' => 'Tag', 'property' => 'reference'),
-            array('label' => 'Issue', 'property' => 'id')
+            array('label' => 'Issue', 'property' => 'id'),
+            array('label' => 'IssueComment', 'property' => 'id')
         );
     }
 }
