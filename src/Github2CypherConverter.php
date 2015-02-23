@@ -14,7 +14,8 @@ namespace Ikwattro\Github2Cypher;
 use Ikwattro\Github2Cypher\Converter\CreateEventConverter,
     Ikwattro\Github2Cypher\Converter\PushEventConverter,
     Ikwattro\Github2Cypher\Converter\PullRequestEventConverter,
-    Ikwattro\Github2Cypher\Converter\WatchEventConverter;
+    Ikwattro\Github2Cypher\Converter\WatchEventConverter,
+    Ikwattro\Github2Cypher\Converter\IssuesEventConverter;
 use Ikwattro\GithubEvent\Event\BaseEvent;
 
 class Github2CypherConverter
@@ -34,6 +35,7 @@ class Github2CypherConverter
             'PushEvent' => new PushEventConverter(),
             'CreateEvent' => new CreateEventConverter(),
             'WatchEvent' => new WatchEventConverter(),
+            'IssuesEvent' => new IssuesEventConverter()
         ];
     }
 
@@ -64,7 +66,8 @@ class Github2CypherConverter
             array('label' => 'Branch', 'property' => 'name'),
             array('label' => 'GithubEvent', 'property' => 'type'),
             array('label' => 'EventType', 'property' => 'type'),
-            array('label' => 'Tag', 'property' => 'tag_name')
+            array('label' => 'Tag', 'property' => 'tag_name'),
+            array('label' => 'Issue', 'property' => 'number')
         );
     }
 
@@ -81,7 +84,8 @@ class Github2CypherConverter
             array('label' => 'GithubEvent', 'property' => 'id'),
             array('label' => 'PullRequest', 'property' => 'id'),
             array('label' => 'Push', 'property' => 'id'),
-            array('label' => 'Tag', 'property' => 'reference')
+            array('label' => 'Tag', 'property' => 'reference'),
+            array('label' => 'Issue', 'property' => 'id')
         );
     }
 }
