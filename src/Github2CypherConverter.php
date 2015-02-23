@@ -15,7 +15,8 @@ use Ikwattro\Github2Cypher\Converter\CreateEventConverter,
     Ikwattro\Github2Cypher\Converter\PushEventConverter,
     Ikwattro\Github2Cypher\Converter\PullRequestEventConverter,
     Ikwattro\Github2Cypher\Converter\WatchEventConverter,
-    Ikwattro\Github2Cypher\Converter\IssuesEventConverter;
+    Ikwattro\Github2Cypher\Converter\IssuesEventConverter,
+    Ikwattro\Github2Cypher\Converter\IssueCommentEventConverter;
 use Ikwattro\GithubEvent\Event\BaseEvent;
 
 class Github2CypherConverter
@@ -35,7 +36,8 @@ class Github2CypherConverter
             'PushEvent' => new PushEventConverter(),
             'CreateEvent' => new CreateEventConverter(),
             'WatchEvent' => new WatchEventConverter(),
-            'IssuesEvent' => new IssuesEventConverter()
+            'IssuesEvent' => new IssuesEventConverter(),
+            'IssueCommentEvent' => new IssueCommentEventConverter()
         ];
     }
 
