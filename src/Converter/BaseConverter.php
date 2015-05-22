@@ -30,7 +30,7 @@ abstract class BaseConverter implements EventConverterInterface
         DELETE r
         MERGE (user)-[:LAST_EVENT]->(event)
         WITH user, event, collect(lastEvent) as lastEvents
-        FOREACH (x in lastEvents | CREATE (event)-[:NEXT]->(x))
+        FOREACH (x in lastEvents | CREATE (event)-[:PREVIOUS_EVENT]->(x))
         RETURN event';
 
         $p = [
