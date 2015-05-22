@@ -37,7 +37,7 @@ abstract class BaseConverter implements EventConverterInterface
             'user_id' => $event->getActor()->getId(),
             'user_login' => $event->getActor()->getLogin(),
             'event_id' => $event->getEventId(),
-            'event_time' => $event->getCreatedTime()->getTimestamp(),
+            'event_time' => ($event->getCreatedTime()->getTimestamp() * 1000),
             'event_type' => $event->getEventType()
         ];
 
