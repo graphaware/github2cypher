@@ -54,20 +54,39 @@ abstract class BaseConverter implements EventConverterInterface
         return $repo_name;
     }
 
+    protected function getRepoOwner(Repository $repository)
+    {
+        $explRepoName = explode('/', $repository->getName());
+        $repo_owner = $explRepoName[count($explRepoName) -2];
+
+        return $repo_owner;
+    }
+
     protected function buildRepoOwnedByActorOrOrg(BaseEvent $event)
     {
         if ($event->hasBaseOrg()) {
             $owner_login = $event->getBaseOrg()->getName();
             $owner_id = $event->getBaseOrg()->getId();
         } else {
-            $owner_login = $event->getActor()->getLogin();
-            $owner_id = $event->getActor()->getId();
+            if ($event->getRepository()->getOwner() != null) {
+                $owner_id = $event->getRepository()->getOwner()->getId();
+                $owner_login = $event->getRepository()->getOwner()->getLogin();
+            } else {
+                $owner_login = $this->getRepoOwner($event->getRepository());
+                $owner_id = null;
+            }
         }
 
         $q = 'MERGE (repo:Repository {id: {repo_id}})
         ON CREATE SET repo.name = {repo_name}
-        MERGE (user:User {id: {user_id}})
-        ON CREATE SET user.login = {user_login}';
+        MERGE (user:User {login: {user_login}})';
+
+        if (null !== $owner_id) {
+            $q .= '
+            ON CREATE SET user.id = {user_id}';
+        }
+
+
 
         if ($event->hasBaseOrg()) {
             $q .= '
