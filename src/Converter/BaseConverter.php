@@ -68,25 +68,14 @@ abstract class BaseConverter implements EventConverterInterface
             $owner_login = $event->getBaseOrg()->getName();
             $owner_id = $event->getBaseOrg()->getId();
         } else {
-            if ($event->getRepository()->getOwner() != null) {
-                $owner_id = $event->getRepository()->getOwner()->getId();
-                $owner_login = $event->getRepository()->getOwner()->getLogin();
-            } else {
-                $owner_login = $this->getRepoOwner($event->getRepository());
-                $owner_id = null;
-            }
+            $owner_login = $event->getActor()->getLogin();
+            $owner_id = $event->getActor()->getId();
         }
 
         $q = 'MERGE (repo:Repository {id: {repo_id}})
         ON CREATE SET repo.name = {repo_name}
-        MERGE (user:User {login: {user_login}})';
-
-        if (null !== $owner_id) {
-            $q .= '
-            ON CREATE SET user.id = {user_id}';
-        }
-
-
+        MERGE (user:User {id: {user_id}})
+        SET user.login = {user_login}';
 
         if ($event->hasBaseOrg()) {
             $q .= '
