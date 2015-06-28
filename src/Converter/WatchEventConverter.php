@@ -32,11 +32,16 @@ class WatchEventConverter extends BaseConverter
         $q = 'MATCH (event:GithubEvent {id: {event_id}})
         MERGE (repo:Repository {id: {repo_id}})
         ON CREATE SET repo.name = {repo_name}
-        MERGE (event)-[:WATCHED_REPOSITORY]->(repo)';
+        MERGE (event)-[:WATCHED_REPOSITORY]->(repo)
+        MERGE (actor:User {id: {user_id}})
+        ON CREATE SET actor.login = {user_login}
+        MERGE (actor)-[:WATCH]->(repo)';
 
         $p['event_id'] = $event->getEventId();
         $p['repo_id'] = $event->getRepository()->getId();
         $p['repo_name'] = $this->getRepoName($event->getRepository());
+        $p['user_id'] = $event->getActor()->getId();
+        $p['user_login'] = $event->getActor()->getLogin();
 
         if ($event->hasBaseOrg()) {
             $q .= '

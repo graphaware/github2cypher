@@ -58,6 +58,7 @@ class PushEventConverter extends BaseConverter
         OPTIONAL MATCH (branch)-[r:LAST_PUSH]->(lastPush)
         DELETE r
         CREATE (push:Push {id: {push_id}})
+        SET push.time = {push_time}
         MERGE (branch)-[:LAST_PUSH]->(push)
         MERGE (push)-[:PUSH_TO]->(branch)
         WITH push, collect(lastPush) as last
@@ -69,7 +70,8 @@ class PushEventConverter extends BaseConverter
         $p = [
             'branch_ref' => $this->getBranchReference($event),
             'push_id' => $event->getPushId(),
-            'event_id' => $event->getEventId()
+            'event_id' => $event->getEventId(),
+            'push_time' => ($event->getCreatedTime()->getTimestamp() * 1000)
         ];
 
         return [
