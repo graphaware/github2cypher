@@ -21,7 +21,7 @@ abstract class BaseConverter implements EventConverterInterface
         $q = 'MERGE (user:User {id: {user_id}})
         ON CREATE SET user.login = {user_login}
         MERGE (event:GithubEvent {id: {event_id}})
-        SET event.type = {event_type}, event.time = {event_time}, user_id: {user_id}
+        SET event.type = {event_type}, event.time = {event_time}, event.user_id = {user_id}
         MERGE (et:EventType {type:{event_type}})
         MERGE (event)-[:EVENT_TYPE]->(et)
         RETURN event';
