@@ -82,14 +82,15 @@ class PushEventConverter extends BaseConverter
         array_reverse($commits);
         foreach ($commits as $commit) {
             $q = 'MATCH (push:Push {id: {push_id}})
-            MERGE (commit:Commit {sha: {sha} })
+            MERGE (commit:Commit {sha: {sha} }, ref: {commit_ref})
             ON CREATE set commit.message = {message}
             MERGE (push)-[:COMMIT]->(commit)';
 
             $p = [
                 'push_id' => $event->getPushId(),
                 'sha' => $commit->getSha(),
-                'message' => $commit->getMessage()
+                'message' => $commit->getMessage(),
+                'ref' => $event->getPushId() . ':' . $commit->getSha()
             ];
 
             $sts[] = [
