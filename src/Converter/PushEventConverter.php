@@ -55,15 +55,10 @@ class PushEventConverter extends BaseConverter
     private function buildPushLinkedList(PushEvent $event)
     {
         $q = 'MATCH (branch:Branch {reference: {branch_ref}})
-        OPTIONAL MATCH (branch)-[r:LAST_PUSH]->(lastPush)
-        DELETE r
-        CREATE (push:Push {id: {push_id}})
-        SET push.time = {push_time}
+        MERGE (push:Push {id: {push_id}})
+        ON CREATE SET push.time = {push_time}
         MERGE (branch)-[:LAST_PUSH]->(push)
         MERGE (push)-[:PUSH_TO]->(branch)
-        WITH push, collect(lastPush) as last
-        FOREACH (x in last | CREATE (push)-[:PREVIOUS_PUSH]->(x))
-        WITH push
         MATCH (ev:GithubEvent {id: {event_id}})
         MERGE (ev)-[:PUSHED]->(push)';
 
@@ -87,12 +82,9 @@ class PushEventConverter extends BaseConverter
         array_reverse($commits);
         foreach ($commits as $commit) {
             $q = 'MATCH (push:Push {id: {push_id}})
-            OPTIONAL MATCH (push)-[r:LAST_COMMIT]->(com)
-            DELETE r
-            WITH push, collect(com) as lastCommits
-            CREATE (commit:Commit {sha: {sha}, message: {message} })
-            MERGE (push)-[:LAST_COMMIT]->(commit)
-            FOREACH (x IN lastCommits | CREATE (commit)-[:PREVIOUS_COMMIT]->(x))';
+            MERGE (commit:Commit {sha: {sha} })
+            ON CREATE set commit.message = {message}
+            MERGE (push)-[:COMMIT]->(commit)';
 
             $p = [
                 'push_id' => $event->getPushId(),
