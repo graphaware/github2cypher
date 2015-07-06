@@ -2,11 +2,11 @@
     "name": "ikwattro/github2cypher",
     "description": "Github Public Events translated to Neo4j Cypher Statements",
     "require": {
-        "ikwattro/github-event": "~1.0",
-        "neoxygen/neoclient": "~2.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.7@dev"
+        "phpunit/phpunit": "~4.7@dev",
+        "ikwattro/github-event": "^1.0",
+        "neoxygen/neoclient": "^2.2"
     },
     "license": "MIT",
     "authors": [
