@@ -30,7 +30,7 @@ class IssueCommentEventConverter extends BaseConverter
     private function buildIssueQuery(IssueCommentEvent $event)
     {
         $q = 'MERGE (issue:Issue {id: {issue_id}})
-        ON CREATE SET issue.number = {issue_number}, issue.title = {issue_title}, issue.body = {issue_body}
+        ON CREATE SET issue.number = {issue_number}, issue.title = {issue_title}
         WITH issue
         MATCH (repo:Repository {id: {repo_id}})
         MERGE (issue)-[:ISSUE_ON_REPOSITORY]->(repo)';
@@ -38,7 +38,6 @@ class IssueCommentEventConverter extends BaseConverter
         $p = [
             'issue_id' => $event->getIssue()->getId(),
             'issue_number' => $event->getIssue()->getNumber(),
-            'issue_body' => $event->getIssue()->getBody(),
             'issue_title' => $event->getIssue()->getTitle(),
             'repo_id' => $event->getRepository()->getId()
         ];
@@ -53,19 +52,15 @@ class IssueCommentEventConverter extends BaseConverter
     {
         $q = 'MATCH (issue:Issue {id: {issue_id}})
         MATCH (event:GithubEvent {id: {event_id}})
-        OPTIONAL MATCH (issue)-[r:LAST_COMMENT]->(lastComment)
-        DELETE r
-        WITH issue, collect(lastComment) as lastComments, event
-        CREATE (comment:IssueComment {id: {comment_id}})
-        SET comment.body = {comment_body}
+        WITH issue, event
+        MERGE (comment:IssueComment {id: {comment_id}})
+        ON CREATE SET comment.time = event.time
         MERGE (event)-[:WROTE_COMMENT]->(comment)
-        MERGE (issue)-[:LAST_COMMENT]->(comment)
-        FOREACH (x IN lastComments | CREATE (comment)-[:PREVIOUS_COMMENT]->(x))';
+        MERGE (comment)<-[:ISSUE_COMMENT]-(issue)';
 
         $p = [
             'issue_id' => $event->getIssue()->getId(),
             'comment_id' => $event->getCommentId(),
-            'comment_body' => $event->getComment(),
             'event_id' => $event->getEventId()
         ];
 

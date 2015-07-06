@@ -31,12 +31,11 @@ class IssuesEventConverter extends BaseConverter
     private function buildIssueQuery(IssuesEvent $event)
     {
         $q = 'MERGE (issue:Issue {id: {issue_id}})
-        ON CREATE SET issue.number = {issue_number}, issue.title = {issue_title}, issue.body = {issue_body}';
+        ON CREATE SET issue.number = {issue_number}, issue.title = {issue_title}';
 
         $p = [
             'issue_id' => $event->getIssue()->getId(),
             'issue_number' => $event->getIssue()->getNumber(),
-            'issue_body' => $event->getIssue()->getBody(),
             'issue_title' => $event->getIssue()->getTitle()
         ];
 
