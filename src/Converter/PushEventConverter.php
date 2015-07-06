@@ -59,6 +59,7 @@ class PushEventConverter extends BaseConverter
         ON CREATE SET push.time = {push_time}
         MERGE (branch)-[:LAST_PUSH]->(push)
         MERGE (push)-[:PUSH_TO]->(branch)
+        WITH push
         MATCH (ev:GithubEvent {id: {event_id}})
         MERGE (ev)-[:PUSHED]->(push)';
 
