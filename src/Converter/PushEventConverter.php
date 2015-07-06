@@ -57,7 +57,6 @@ class PushEventConverter extends BaseConverter
         $q = 'MATCH (branch:Branch {reference: {branch_ref}})
         MERGE (push:Push {id: {push_id}})
         ON CREATE SET push.time = {push_time}
-        MERGE (branch)-[:LAST_PUSH]->(push)
         MERGE (push)-[:PUSH_TO]->(branch)
         WITH push
         MATCH (ev:GithubEvent {id: {event_id}})
