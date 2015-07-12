@@ -39,7 +39,6 @@ class PullRequestEventConverter extends BaseConverter
         MERGE (pr:PullRequest {id: {pr_id}})
         ON CREATE SET pr.number = {pr_number},
         pr.title = {pr_title},
-        pr.body = {pr_body}
         MERGE (event)-[:'.$action.']->(pr)';
 
         if ($event->getPullRequest()->isMerged() && $event->isCloseAction()) {
@@ -55,7 +54,6 @@ class PullRequestEventConverter extends BaseConverter
             'pr_id' => $pr->getId(),
             'pr_number' => $pr->getNumber(),
             'pr_title' => $pr->getTitle(),
-            'pr_body' => $pr->getBody(),
             'event_id' => $event->getEventId()
         ];
 
@@ -103,12 +101,11 @@ class PullRequestEventConverter extends BaseConverter
         $q = 'MATCH (pr:PullRequest {id: {pr_id}})
         MERGE (repo:Repository {id: {repo_id}})
         ON CREATE SET repo.name = {repo_name}
-        MERGE (user:User {login: {owner_login}})
-        SET user.id = {owner_id}';
+        MERGE (user:User {id: {owner_id}})
+        ON CREATE SET user.login = {owner_login}';
 
         if ($event->getPullRequest()->getBase()->getRepository()->getOwner()->isOrg()) {
-            $q .= '
-            SET user :Organisation';
+            $q .= ', user:Organisation';
         }
 
         $q .= '
