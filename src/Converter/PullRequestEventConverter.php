@@ -38,7 +38,7 @@ class PullRequestEventConverter extends BaseConverter
         $q = 'MATCH (event:GithubEvent {id: {event_id}})
         MERGE (pr:PullRequest {id: {pr_id}})
         ON CREATE SET pr.number = {pr_number},
-        pr.title = {pr_title},
+        pr.title = {pr_title}
         MERGE (event)-[:'.$action.']->(pr)';
 
         if ($event->getPullRequest()->isMerged() && $event->isCloseAction()) {
